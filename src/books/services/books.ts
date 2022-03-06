@@ -28,6 +28,8 @@ export class BooksProvider {
   }
 
   createBook(bookData: BookDto): Promise<BookEntity> {
+    console.log('BookData: /n');
+    console.log(bookData);
     const bookEntity = this.bookRepository.create(bookData);
     return this.bookRepository.save(bookEntity);
   }

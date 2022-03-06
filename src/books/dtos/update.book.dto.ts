@@ -4,4 +4,5 @@ export class UpdateBookDto {
   description: string;
   author: string;
   publisher: string;
+  image: string;
 }

@@ -7,7 +7,8 @@ export class ImageUploadController {
   @Post()
   async create(@Req() request, @Res() response) {
     try {
-      await this.imageUploadService.fileupload(request, response);
+      await this.imageUploadService.fileupload(request);
+      return response.status(201).json(request.files[0].Location);
     } catch (error) {
       return response
         .status(500)

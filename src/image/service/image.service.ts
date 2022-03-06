@@ -16,22 +16,6 @@ AWS.config.update({
 export class ImageUploadService {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
-
-  async fileupload(@Req() req, @Res() res) {
-    try {
-      this.upload(req, res, function (error) {
-        if (error) {
-          console.log(error);
-          return res.status(404).json(`Failed to upload image file: ${error}`);
-        }
-        return res.status(201).json(req.files[0].location);
-      });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json(`Failed to upload image file: ${error}`);
-    }
-  }
-
   upload = multer({
     storage: s3Storage({
       s3: s3,
@@ -41,5 +25,33 @@ export class ImageUploadService {
         cb(null, `${Date.now().toString()}-${file.originalname}`);
       },
     }),
-  }).array('upload', 1);
+  }).array('image', 1);
+
+  async fileupload(@Req() req) {
+    return new Promise((resolve, reject) => {
+      this.upload(req, null, (err) => {
+        // console.log(req);
+        if (err) {
+          reject(err);
+        }
+        resolve(req.files[0].Location);
+      });
+    });
+  }
+
+  // async fileupload(@Req() req, @Res() res) {
+  //   try {
+  //     this.upload(req, res, function (error) {
+  //       if (error) {
+  //         console.log(error);
+  //         return res.status(404).json(`Failed to upload image file: ${error}`);
+  //       }
+  //       // console.log(req);
+  //       return res.status(201).json(req.files[0].Location);
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     return res.status(500).json(`Failed to upload image file: ${error}`);
+  //   }
+  // }
 }
